@@ -10,6 +10,22 @@ import java.util.Map;
  * Created by allankerr on 2017-01-06.
  */
 public abstract class Request {
+
+    /**
+     * The url used for the request without any parameters
+     */
+    URL url;
+
+    /**
+     * The headers to be added to the request
+     */
+    Map<String, String> headers = new HashMap<String, String>();
+
+    /**
+     * The parameters to be added to the URL or body depending on the request method.
+     */
+    Map<String, String> parameters = new HashMap<String, String>();
+
     public class Builder {
 
         /**
@@ -69,7 +85,9 @@ public abstract class Request {
         }
     }
 
-    protected Request(Builder builder) {
-
+    Request(Builder builder) {
+        this.url = builder.url;
+        this.headers = builder.headers;
+        this.parameters = builder.parameters;
     }
 }
