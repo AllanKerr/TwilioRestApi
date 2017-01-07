@@ -8,4 +8,9 @@ class PostRequest extends Request {
     PostRequest(Request.Builder builder) {
         super(builder);
     }
+
+    public void connect() {
+
+    }
+
 }

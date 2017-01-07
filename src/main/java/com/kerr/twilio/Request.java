@@ -1,7 +1,9 @@
 package com.kerr.twilio;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ public abstract class Request {
      */
     Map<String, String> parameters = new HashMap<String, String>();
 
-    public class Builder {
+    public static class Builder {
 
         /**
          * The method used to send the request
@@ -53,20 +55,21 @@ public abstract class Request {
             this.url = url;
         }
 
-        public Builder header(String key, String value) {
+        public Request.Builder header(String key, String value) {
             headers.put(key, value);
             return this;
         }
 
-        public Builder parameter(String key, String value) {
+        public Request.Builder parameter(String key, String value) {
             parameters.put(key, value);
             return this;
         }
 
-        public Builder basicAuth(String username, String password) {
+        public Request.Builder basicAuth(String username, String password) {
             try {
                 byte[] message = (username + ":" + password).getBytes("UTF-8");
                 String encoded = DatatypeConverter.printBase64Binary(message);
+                System.out.println(encoded);
                 return header("Authorization", "Basic " + encoded);
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
@@ -90,4 +93,14 @@ public abstract class Request {
         this.headers = builder.headers;
         this.parameters = builder.parameters;
     }
+
+    HttpURLConnection openConnection(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            connection.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+        return connection;
+    }
+
+    public abstract void connect() throws IOException;
 }
