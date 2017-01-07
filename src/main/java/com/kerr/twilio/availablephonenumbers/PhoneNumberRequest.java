@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by allankerr on 2017-01-06.
  */
-public class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
+class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
 
     protected String getEndPointURL() {
         return "Local.json";
