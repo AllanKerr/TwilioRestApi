@@ -12,17 +12,12 @@ import java.util.List;
  */
 class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
 
-    protected String getEndPointURL() {
-        return "Local.json";
-    }
-
     protected RequestMethod getRequestMethod() {
         return RequestMethod.GET;
     }
 
-    public PhoneNumberRequest(String accountSid, String authToken, String countryCode, PhoneNumberType type) {
+    protected PhoneNumberRequest(String accountSid, String authToken, String countryCode, PhoneNumberType type) {
         super(accountSid, authToken, "AvailablePhoneNumbers/" + countryCode + "/" + type.getPathComponent() + ".json");
-        System.out.println(type.name());
     }
 
     public PhoneNumberRequest setAreaCode(Integer areaCode) {
@@ -73,7 +68,6 @@ class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
     public List<AvailablePhoneNumber> fetchResponse() throws IOException {
         Gson gson = new Gson();
         String responseString = fetchRawResponse().toString();
-        System.out.println("Reso: " + responseString);
         PhoneNumberResponse response = gson.fromJson(responseString, PhoneNumberResponse.class);
         return response.getAvailablePhoneNumbers();
     }

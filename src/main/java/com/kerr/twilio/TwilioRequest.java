@@ -16,8 +16,6 @@ public abstract class TwilioRequest<T> {
 
     protected Request.Builder builder;
 
-    protected abstract String getEndPointURL();
-
     protected abstract RequestMethod getRequestMethod();
 
     /**
