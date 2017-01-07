@@ -2,7 +2,10 @@ package com.kerr.twilio;
 
 import com.google.common.base.Joiner;
 
+import javax.xml.ws.http.HTTPException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.util.Map;
 
@@ -28,14 +31,30 @@ class GetRequest extends Request {
         return Joiner.on('&').withKeyValueSeparator("=").join(components);
     }
 
-    public void connect() throws IOException {
-        HttpURLConnection conn = super.openConnection(url);
+    public StringBuffer fetch() throws IOException {
+        HttpURLConnection connection = super.openConnection(url);
         System.out.println(url);
         try {
-            conn.setRequestMethod(RequestMethod.GET.name());
+            connection.setRequestMethod(RequestMethod.GET.name());
         } catch (ProtocolException e) {
             throw new RuntimeException(e);
         }
-        conn.setDoOutput(true);
+        connection.setDoOutput(true);
+
+        int respCode = connection.getResponseCode();
+        if (respCode == HttpURLConnection.HTTP_OK) {
+
+            StringBuffer response = new StringBuffer();
+            String line;
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+            return response;
+        } else {
+            throw new HTTPException(respCode);
+        }
     }
 }

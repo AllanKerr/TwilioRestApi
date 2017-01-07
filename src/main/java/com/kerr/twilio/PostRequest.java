@@ -9,8 +9,8 @@ class PostRequest extends Request {
         super(builder);
     }
 
-    public void connect() {
-
+    public StringBuffer fetch() {
+        return null;
     }
 
 }

@@ -102,5 +102,5 @@ public abstract class Request {
         return connection;
     }
 
-    public abstract void connect() throws IOException;
+    public abstract StringBuffer fetch() throws IOException;
 }
