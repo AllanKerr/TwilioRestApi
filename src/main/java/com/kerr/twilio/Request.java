@@ -1,11 +1,12 @@
 package com.kerr.twilio;
 
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.ws.http.HTTPException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,11 @@ import java.util.Map;
  * Created by allankerr on 2017-01-06.
  */
 public abstract class Request {
+
+    /**
+     * The method used to send the request
+     */
+    private RequestMethod method;
 
     /**
      * The url used for the request without any parameters
@@ -97,6 +103,13 @@ public abstract class Request {
 
     HttpURLConnection openConnection(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setDoOutput(true);
+        try {
+            connection.setRequestMethod(RequestMethod.GET.name());
+        } catch (ProtocolException e) {
+            // This SHOULD never be thrown.
+            throw new RuntimeException(e);
+        }
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             connection.setRequestProperty(entry.getKey(), entry.getValue());
         }
@@ -106,7 +119,7 @@ public abstract class Request {
     String buildParameterList() {
         StringBuilder parameterList = new StringBuilder();
         try {
-            for (Map.Entry<String, String> param : parameters.entrySet()) {
+            for (Map.Entry<String,String> param : parameters.entrySet()) {
                 if (parameterList.length() != 0) {
                     parameterList.append('&');
                 }
@@ -121,4 +134,26 @@ public abstract class Request {
         }
         return parameterList.toString();
     }
+
+    StringBuffer parseResponse(HttpURLConnection connection) throws IOException {
+        int respCode = connection.getResponseCode();
+        if (respCode >= 200 && respCode < 300) {
+
+            StringBuffer response = new StringBuffer();
+            String line;
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+            System.out.println(response);
+            return response;
+        } else {
+            System.out.println(respCode);
+            throw new HTTPException(respCode);
+        }
+    }
+
+    public abstract StringBuffer fetch() throws IOException;
 }

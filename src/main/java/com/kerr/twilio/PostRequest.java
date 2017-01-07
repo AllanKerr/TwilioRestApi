@@ -1,6 +1,7 @@
 package com.kerr.twilio;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * Created by allankerr on 2017-01-06.
@@ -12,31 +13,15 @@ class PostRequest extends Request {
     }
 
     public StringBuffer fetch() throws IOException {
-        /*HttpURLConnection connection = super.openConnection(url);
-        System.out.println(url);
-        try {
-            connection.setRequestMethod(RequestMethod.GET.name());
-        } catch (ProtocolException e) {
-            throw new RuntimeException(e);
-        }
-        connection.setDoOutput(true);
 
-        int respCode = connection.getResponseCode();
-        if (respCode == HttpURLConnection.HTTP_OK) {
+        HttpURLConnection connection = openConnection(url);
 
-            StringBuffer response = new StringBuffer();
-            String line;
+        byte[] body = buildParameterList().getBytes();
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("Content-Length", String.valueOf(body.length));
+        connection.getOutputStream().write(body);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-            return response;
-        } else {
-            throw new HTTPException(respCode);
-        }*/
-        return null;
+        return parseResponse(connection);
     }
 
 }
