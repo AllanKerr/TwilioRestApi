@@ -147,10 +147,8 @@ public abstract class Request {
                 response.append(line);
             }
             reader.close();
-            System.out.println(response);
             return response;
         } else {
-            System.out.println(respCode);
             throw new HTTPException(respCode);
         }
     }
