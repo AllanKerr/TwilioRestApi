@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by allankerr on 2017-01-06.
  */
-class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
+public class PhoneNumberRequest extends TwilioRequest<List<AvailablePhoneNumber>> {
 
     protected RequestMethod getRequestMethod() {
         return RequestMethod.GET;
