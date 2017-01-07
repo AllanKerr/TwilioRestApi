@@ -3,7 +3,7 @@ package com.kerr.twilio.incomingphonenumbers;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kerr.twilio.availablephonenumbers.Capabilities;
+import com.kerr.twilio.Capabilities;
 
 public class IncomingPhoneNumber {
 

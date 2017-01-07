@@ -3,6 +3,7 @@ package com.kerr.twilio.availablephonenumbers;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kerr.twilio.Capabilities;
 
 public class AvailablePhoneNumber {
 

@@ -1,5 +1,5 @@
 
-package com.kerr.twilio.availablephonenumbers;
+package com.kerr.twilio;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
