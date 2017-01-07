@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,5 +103,22 @@ public abstract class Request {
         return connection;
     }
 
-    public abstract StringBuffer fetch() throws IOException;
+    String buildParameterList() {
+        StringBuilder parameterList = new StringBuilder();
+        try {
+            for (Map.Entry<String, String> param : parameters.entrySet()) {
+                if (parameterList.length() != 0) {
+                    parameterList.append('&');
+                }
+                parameterList.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                parameterList.append('=');
+                parameterList.append(URLEncoder.encode(param.getValue(), "UTF-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            // If any iteration throws it, all will.
+            // This SHOULD never be thrown.
+            throw new RuntimeException(e);
+        }
+        return parameterList.toString();
+    }
 }

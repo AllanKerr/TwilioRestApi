@@ -1,13 +1,13 @@
 package com.kerr.twilio;
 
-import com.google.common.base.Joiner;
-
 import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
-import java.util.Map;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
 /**
  * Created by allankerr on 2017-01-06.
@@ -18,7 +18,7 @@ class GetRequest extends Request {
         super(builder);
 
         if (this.parameters.size() > 0) {
-            String parameters = buildParameters(this.parameters);
+            String parameters = buildParameterList();
             try {
                 this.url = new URL(this.url + "?" + parameters);
             } catch (MalformedURLException e) {
@@ -27,13 +27,10 @@ class GetRequest extends Request {
         }
     }
 
-    private String buildParameters(Map<String,String> components) {
-        return Joiner.on('&').withKeyValueSeparator("=").join(components);
-    }
-
     public StringBuffer fetch() throws IOException {
+
+        // Create the connection
         HttpURLConnection connection = super.openConnection(url);
-        System.out.println(url);
         try {
             connection.setRequestMethod(RequestMethod.GET.name());
         } catch (ProtocolException e) {
@@ -41,6 +38,7 @@ class GetRequest extends Request {
         }
         connection.setDoOutput(true);
 
+        // Retrieve and parse the response
         int respCode = connection.getResponseCode();
         if (respCode == HttpURLConnection.HTTP_OK) {
 
