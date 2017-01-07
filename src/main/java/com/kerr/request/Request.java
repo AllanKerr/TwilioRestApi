@@ -76,7 +76,6 @@ public abstract class Request {
             try {
                 byte[] message = (username + ":" + password).getBytes("UTF-8");
                 String encoded = DatatypeConverter.printBase64Binary(message);
-                System.out.println(encoded);
                 return header("Authorization", "Basic " + encoded);
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);

@@ -27,7 +27,6 @@ public abstract class TwilioRequest<T> {
     protected TwilioRequest(String accountSid, String authToken, String endPointUrl) {
         try {
             URL url = new URL(BASE_URL + "/" + accountSid + "/" + endPointUrl);
-            System.out.println(url);
             this.builder = new Request.Builder(getRequestMethod(), url);
             this.builder.basicAuth(accountSid, authToken);
         } catch (MalformedURLException e) {
